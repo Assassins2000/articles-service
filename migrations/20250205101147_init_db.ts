@@ -1,14 +1,14 @@
-import type { Knex } from 'knex';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-export async function up(knex: Knex): Promise<void> {
-  const { schema } = knex;
-  await schema.createTable('users', (table) => {
+export async function up(knex) {
+  //const { schema } = knex;
+  await knex.schema.createTable('users', (table) => {
     table.increments('id').unique().primary();
     table.string('email').unique();
     table.string('password');
   });
 
-  await schema.createTable('articles', (table) => {
+  await knex.schema.createTable('articles', (table) => {
     table.increments('id').unique().primary();
     table.string('title');
     table.string('content');
@@ -16,13 +16,15 @@ export async function up(knex: Knex): Promise<void> {
     table.boolean('deleted').defaultTo(false);
   });
 
-  await schema.createTable('tags', (table) => {
+  await knex.schema.createTable('tags', (table) => {
     table.increments('id').unique().primary();
     table.string('name');
   });
 
-  await schema.createTable('article_tags', (table) => {
+  await knex.schema.createTable('article_tags', (table) => {
     table.integer('articles_id').references('id').inTable('articles');
     table.integer('tag_id').references('id').inTable('tags');
   });
 }
+
+export async function down() {};
