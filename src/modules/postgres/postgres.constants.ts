@@ -1,0 +1,2 @@
+export const POSTGRES_KNEX_INJECT = 'POSTGRES_KNEX_INJECT';
+export const POSTGRES_POOL = 5;
