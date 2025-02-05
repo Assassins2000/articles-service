@@ -15,7 +15,8 @@ class ConfigurationService {
     this.dbHost = this.configService.get<string>('app.dbHost') ?? 'localhost';
     this.dbPort = this.configService.get<number>('app.dbPort') ?? 5433;
     this.dbName = this.configService.get<string>('app.dbName') ?? 'activity';
-    this.dbUsername = this.configService.get<string>('app.dbUserName') ?? 'postgres';
+    this.dbUsername =
+      this.configService.get<string>('app.dbUserName') ?? 'postgres';
     this.dbPassword = this.configService.get<string>('app.dbPassword') ?? '1';
     this.$serverPort = this.configService.get<number>('app.serverPort') ?? 3000;
   }
