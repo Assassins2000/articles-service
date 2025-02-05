@@ -13,7 +13,7 @@ export class UserData {
   public async isUserWithUsernameExist(email: string): Promise<boolean> {
     const user: User | undefined = await this.postgres
       .knex<User>('users')
-      .select({ email })
+      .select('email')
       .where('email', email)
       .first();
     return !!user;
