@@ -42,11 +42,7 @@ export class ArticlesData {
         isPrivate: 'articles.is_private',
         tags: this.postgres.knex.raw('to_json(array_agg(tags))'),
       })
-      .leftJoin(
-        'articles_tags',
-        'articles_tags.article_id',
-        'articles_tags.tag_id',
-      )
+      .leftJoin('articles_tags', 'articles_tags.article_id', 'articles.id')
       .leftJoin('tags', 'articles_tags.tag_id', 'tags.id')
       .where('articles.id', id)
       .groupBy('articles.id')
@@ -66,11 +62,7 @@ export class ArticlesData {
         isPrivate: 'articles.is_private',
         tags: this.postgres.knex.raw('to_json(array_agg(tags))'),
       })
-      .leftJoin(
-        'articles_tags',
-        'articles_tags.article_id',
-        'articles_tags.tag_id',
-      )
+      .leftJoin('articles_tags', 'articles_tags.article_id', 'articles.id')
       .leftJoin('tags', 'articles_tags.tag_id', 'tags.id')
       .where((builder) => {
         if (isPublic) {

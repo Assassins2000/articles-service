@@ -4,9 +4,6 @@ import { ArticlesData } from './articles.data';
 import { CreateArticlesDto } from './validators-dto';
 import { ArticlesServiceErrorCode } from './constants';
 import { ArticlesEntity } from './entities';
-// import { ArticlesEntity } from './entities';
-// import { UserServiceError } from './types';
-// import { TagsIdsNotValidEcxpetion } from './exceptions';
 
 @Injectable()
 export class ArticlesService {

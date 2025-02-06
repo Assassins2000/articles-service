@@ -14,7 +14,7 @@ class ConfigurationService {
   constructor(private readonly configService: ConfigService) {
     this.dbHost = this.configService.get<string>('app.dbHost') ?? 'localhost';
     this.dbPort = this.configService.get<number>('app.dbPort') ?? 5434;
-    this.dbName = this.configService.get<string>('app.dbName') ?? 'articles';
+    this.dbName = this.configService.get<string>('app.dbName') ?? 'articles1';
     this.dbUsername =
       this.configService.get<string>('app.dbUserName') ?? 'postgres';
     this.dbPassword = this.configService.get<string>('app.dbPassword') ?? '1';
