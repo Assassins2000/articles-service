@@ -2,6 +2,8 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
+  Param,
   Post,
   UseGuards,
   UseInterceptors,
@@ -12,6 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ArticlesServiceErrorCode } from './constants';
 import { CreateArticlesDto } from './validators-dto';
 import { ArticlesService } from './articles.service';
+import { ArticlesEntity } from './entities';
 
 @Controller('articles')
 export class ArticlesController {
@@ -24,5 +27,12 @@ export class ArticlesController {
     @Body() createArticlesDto: CreateArticlesDto,
   ): Promise<boolean | ArticlesServiceErrorCode> {
     return await this.articlesService.create(createArticlesDto);
+  }
+
+  @UseGuards(AuthGuard('bearer'))
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get(':id')
+  public async getById(@Param('id') id: number): Promise<ArticlesEntity> {
+    return this.articlesService.getById(id);
   }
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ArticlesData } from './articles.data';
 import { CreateArticlesDto } from './validators-dto';
 import { ArticlesServiceErrorCode } from './constants';
+import { ArticlesEntity } from './entities';
 // import { ArticlesEntity } from './entities';
 // import { UserServiceError } from './types';
 // import { TagsIdsNotValidEcxpetion } from './exceptions';
@@ -28,5 +29,13 @@ export class ArticlesService {
     return tagIds.length === tagsCount;
   }
 
-  // public getById(id: number): Promise<CreateArticlesDto> {}
+  public async getById(id: number): Promise<ArticlesEntity> {
+    const article = await this.articlesData.getById(id);
+
+    if (!article) {
+      throw new Error(ArticlesServiceErrorCode.articleNotFound);
+    }
+
+    return article;
+  }
 }

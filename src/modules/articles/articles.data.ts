@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PostgresClient } from '../postgres';
 import { CreateArticlesDto } from './validators-dto';
 import { Article } from './types';
+import { ArticlesEntity } from './entities';
 //import { ArticlesEntity } from './entities';
 
 interface ArticleType {
@@ -31,19 +32,28 @@ export class ArticlesData {
     return true;
   }
 
-  // public async getById(id: number): Promise<ArticlesEntity | null> {
-  //   const article = await this.postgres
-  //     .knex('articles')
-  //     .select(
+  public async getById(id: number): Promise<ArticlesEntity | null> {
+    const article = await this.postgres
+      .knex<Article>('articles')
+      .select({
+        id: 'articles.id',
+        title: 'articles.title',
+        content: 'articles.content',
+        isPrivate: 'articles.is_private',
+        tags: this.postgres.knex.raw('to_json(array_agg(tags))'),
+      })
+      .leftJoin(
+        'articles_tags',
+        'articles_tags.article_id',
+        'articles_tags.tag_id',
+      )
+      .leftJoin('tags', 'articles_tags.tag_id', 'tags.id')
+      .where('articles.id', id)
+      .groupBy('articles.id')
+      .first<Article>();
 
-  //     )
-  //     .leftJoin(
-  //       'article_tags',
-  //       'articles_tags.article_id',
-  //       'articles_tags.tag_id',
-  //     )
-  //     .where('id', id);
-  // }
+    return new ArticlesEntity(article);
+  }
 
   public async getTagsByIds(ids: number[]): Promise<number> {
     const [record] = await this.postgres
