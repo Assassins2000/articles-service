@@ -33,6 +33,7 @@ export async function up(knex) {
       .inTable('articles')
       .onDelete('CASCADE');
     table.integer('tag_id').references('id').inTable('tags');
+    table.unique(['article_id', 'tag_id']).primary();
   });
 
   await knex('tags').insert(
