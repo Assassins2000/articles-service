@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PostgresClient } from '../postgres';
-import { CreateArticlesDto } from './validators-dto';
+import { CreateArticlesDto, PatchArticlesDto } from './validators-dto';
 import { Article } from './types';
 import { ArticlesEntity } from './entities';
 //import { ArticlesEntity } from './entities';
@@ -116,6 +116,24 @@ export class ArticlesData {
       .groupBy('articles.id');
 
     return articles.map((article) => new ArticlesEntity(article));
+  }
+
+  public async patchById(
+    id: number,
+    patchArticlesDto: PatchArticlesDto,
+  ): Promise<boolean> {
+    // В дальнейшем нужно обернуть data в маппер
+    await this.postgres
+      .knex<Article>('articles')
+      .update(patchArticlesDto)
+      .where('id', id);
+    return true;
+  }
+
+  public async deleteById(id: number): Promise<boolean> {
+    // В дальнейшем нужно обернуть data в маппер
+    await this.postgres.knex<Article>('articles').del().where('id', id);
+    return true;
   }
 
   public async getTagsByIds(ids: number[]): Promise<number> {

@@ -56,4 +56,12 @@ export class ArticlesService {
     }
     return this.articlesData.find(true);
   }
+
+  public async patch(id: number, patchArticlesDto): Promise<boolean> {
+    return this.articlesData.patchById(id, patchArticlesDto);
+  }
+
+  public async deleteById(id: number): Promise<boolean> {
+    return this.articlesData.deleteById(id);
+  }
 }
