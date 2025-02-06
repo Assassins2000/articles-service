@@ -6,6 +6,7 @@ import { UserService } from './user.service';
 import { UserData } from './user.data';
 
 @Module({
+  exports: [BasicTokenAuthProvider, UserData],
   imports: [PostgresModule],
   controllers: [AccountEntryController],
   providers: [BasicTokenAuthProvider, UserService, UserData],

@@ -1,1 +1,1 @@
-export {} from './userWithSuchUsernameExist.exception';
+export {} from './tagsIdsNotValid.exception';
