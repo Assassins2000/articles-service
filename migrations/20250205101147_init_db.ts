@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 export async function up(knex) {
   //const { schema } = knex;
   await knex.schema.createTable('users', (table) => {
@@ -27,10 +25,20 @@ export async function up(knex) {
     table.string('name');
   });
 
-  await knex.schema.createTable('article_tags', (table) => {
-    table.integer('articles_id').references('id').inTable('articles');
+  await knex.schema.createTable('articles_tags', (table) => {
+    table
+      .integer('article_id')
+      .references('id')
+      .inTable('articles')
+      .onDelete('CASCADE');
     table.integer('tag_id').references('id').inTable('tags');
   });
+
+  await knex('tags').insert(
+    Array.from(Array(10).keys()).map((key) => ({
+      name: `Тег${key}`,
+    })),
+  );
 }
 
-export async function down() {};
+export async function down() {}
