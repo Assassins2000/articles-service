@@ -1,5 +1,6 @@
+// TODO Разобраться, почему knex криво распознает type script файлы
+
 export async function up(knex) {
-  //const { schema } = knex;
   await knex.schema.createTable('users', (table) => {
     table.increments('id').unique().primary();
     table.string('email').unique();

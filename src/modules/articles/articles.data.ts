@@ -4,7 +4,6 @@ import { PostgresClient } from '../postgres';
 import { CreateArticlesDto, PatchArticlesDto } from './validators-dto';
 import { Article } from './types';
 import { ArticlesEntity } from './entities';
-//import { ArticlesEntity } from './entities';
 
 interface ArticleType {
   article_id: number;

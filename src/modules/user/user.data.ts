@@ -6,6 +6,10 @@ import { RegisterDto } from './validators-dto';
 import { AuthToken, User } from './types';
 import { UserEntity } from './entities';
 
+/**
+ * Вынести логику, связанную с аутентификацией в отдельный модуль
+ */
+
 @Injectable()
 export class UserData {
   constructor(private readonly postgres: PostgresClient) {}
@@ -50,7 +54,7 @@ export class UserData {
     return user ? new UserEntity(user) : null;
   }
 
-  // TODO: Вынести методы с isPasswordCompare и getToken в отдельный пропайдер
+  // TODO: Вынести методы с isPasswordCompare и getToken в отдельный провайдер
   public async isPasswordCompare(password, passwordHash): Promise<boolean> {
     return bcrypt.compare(password, <string>passwordHash);
   }
