@@ -38,4 +38,22 @@ export class ArticlesService {
 
     return article;
   }
+
+  public async getForAuthUsers(queryParams: {
+    tagIds?: number[];
+  }): Promise<ArticlesEntity[]> {
+    if (queryParams.tagIds) {
+      return this.articlesData.findByTagIds(queryParams.tagIds);
+    }
+    return this.articlesData.find();
+  }
+
+  public async getForNotAuthUsers(queryParams: {
+    tagIds?: number[];
+  }): Promise<ArticlesEntity[]> {
+    if (queryParams.tagIds) {
+      return this.articlesData.findByTagIds(queryParams.tagIds, true);
+    }
+    return this.articlesData.find(true);
+  }
 }

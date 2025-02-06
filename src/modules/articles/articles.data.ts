@@ -55,6 +55,69 @@ export class ArticlesData {
     return new ArticlesEntity(article);
   }
 
+  // TO DO Продумать пагинацию
+  public async find(isPublic: boolean = false): Promise<ArticlesEntity[] | []> {
+    const articles = await this.postgres
+      .knex<Article>('articles')
+      .select({
+        id: 'articles.id',
+        title: 'articles.title',
+        content: 'articles.content',
+        isPrivate: 'articles.is_private',
+        tags: this.postgres.knex.raw('to_json(array_agg(tags))'),
+      })
+      .leftJoin(
+        'articles_tags',
+        'articles_tags.article_id',
+        'articles_tags.tag_id',
+      )
+      .leftJoin('tags', 'articles_tags.tag_id', 'tags.id')
+      .where((builder) => {
+        if (isPublic) {
+          builder.where('is_private', false);
+        }
+      })
+      .groupBy('articles.id');
+
+    return articles.map((article) => new ArticlesEntity(article));
+  }
+
+  public async findByTagIds(
+    tagsIds: number[],
+    isPublic: boolean = false,
+  ): Promise<ArticlesEntity[] | []> {
+    const articles = await this.postgres
+      .knex<Article>('articles')
+      .select({
+        id: 'articles.id',
+        title: 'articles.title',
+        content: 'articles.content',
+        isPrivate: 'articles.is_private',
+        tags: this.postgres.knex.raw('to_json(array_agg(tags))'),
+      })
+      .leftJoin(
+        'articles_tags',
+        'articles_tags.article_id',
+        'articles_tags.tag_id',
+      )
+      .leftJoin('tags', 'articles_tags.tag_id', 'tags.id')
+      .where((builder) => {
+        builder.whereRaw(
+          `
+          articles.id IN (SELECT article_id from articles_tags WHERE tag_id IN (??))          
+          `,
+          [tagsIds],
+        );
+
+        if (isPublic) {
+          builder.where('is_private', false);
+        }
+      })
+      .groupBy('articles.id');
+
+    return articles.map((article) => new ArticlesEntity(article));
+  }
+
   public async getTagsByIds(ids: number[]): Promise<number> {
     const [record] = await this.postgres
       .knex('tags')

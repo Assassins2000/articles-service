@@ -8,7 +8,7 @@ export class ArticlesEntity {
 
   protected readonly content: string;
 
-  protected readonly is_private: boolean;
+  protected readonly isPrivate: boolean;
 
   protected readonly tags: TagEntity[];
 
@@ -20,7 +20,7 @@ export class ArticlesEntity {
     this.id = partial.id;
     this.title = partial.title;
     this.content = partial.content || '';
-    this.is_private = partial.is_private || false;
+    this.isPrivate = partial.isPrivate || false;
     this.tags = partial.tags?.map((tag) => new TagEntity(tag)) || [];
   }
 }

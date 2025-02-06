@@ -17,6 +17,10 @@ export class UserEntity {
     return this.id;
   }
 
+  public getEmail(): string {
+    return this.email;
+  }
+
   constructor(partial: User) {
     this.id = partial.id;
     this.email = partial.email;
