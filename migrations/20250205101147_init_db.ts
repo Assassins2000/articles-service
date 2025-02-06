@@ -8,11 +8,17 @@ export async function up(knex) {
     table.string('password');
   });
 
+  await knex.schema.createTable('auth_tokens', (table) => {
+    table.increments('id').unique().primary();
+    table.integer('user_id').references('id').inTable('users');
+    table.string('token');
+  });
+
   await knex.schema.createTable('articles', (table) => {
     table.increments('id').unique().primary();
     table.string('title');
     table.string('content');
-    table.boolean('isPrivate');
+    table.boolean('is_private');
     table.boolean('deleted').defaultTo(false);
   });
 

@@ -18,18 +18,19 @@ export class UserData {
     return user ? new UserEntity(user) : null;
   }
 
-  public async createUser(registerForm: RegisterDto): Promise<UserEntity> {
+  public async createUser(registerForm: RegisterDto): Promise<boolean> {
     const { email, password } = registerForm;
     const salt = await bcrypt.genSalt(3);
     const hashPassword = await bcrypt.hash(password, salt);
 
-    const user: User = await this.postgres.knex<User>('users').insert({
+    await this.postgres.knex<User>('users').insert({
       email,
       password: hashPassword,
     });
-    return new UserEntity(user);
+    return true;
   }
 
+  // TODO: Вынести метод в отдельный провайдер token.data.ts
   public async createToken(userId: number, tokenHash: string): Promise<string> {
     const [record]: AuthToken[] = await this.postgres
       .knex<AuthToken>('auth_tokens')
@@ -38,6 +39,18 @@ export class UserData {
     return record.token;
   }
 
+  // TODO: Вынести метод в отдельный провайдер token.data.ts
+  public async getUserByToken(token: string): Promise<UserEntity | null> {
+    const user = await this.postgres
+      .knex<User>('users')
+      .leftJoin('auth_tokens', 'users.id', '=', 'auth_tokens.user_id')
+      .where('auth_tokens.token', token)
+      .first<User>();
+
+    return user ? new UserEntity(user) : null;
+  }
+
+  // TODO: Вынести методы с isPasswordCompare и getToken в отдельный пропайдер
   public async isPasswordCompare(password, passwordHash): Promise<boolean> {
     return bcrypt.compare(password, <string>passwordHash);
   }

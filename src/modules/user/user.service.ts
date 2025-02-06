@@ -12,7 +12,7 @@ export class UserService {
 
   public async createUser(
     data: RegisterDto,
-  ): Promise<UserEntity | UserServiceError> {
+  ): Promise<boolean | UserServiceError> {
     const { email } = data;
     if (await this.userData.getUserByEmail(email)) {
       return {
@@ -20,8 +20,8 @@ export class UserService {
         message: 'User with such username exists',
       };
     }
-    const user: UserEntity = await this.userData.createUser(data);
-    return user;
+    await this.userData.createUser(data);
+    return true;
   }
 
   public async validateUser(data: LoginDto) {

@@ -18,6 +18,7 @@ export class UserEntity {
   }
 
   constructor(partial: User) {
+    this.id = partial.id;
     this.email = partial.email;
     this.password = partial.password || '';
   }

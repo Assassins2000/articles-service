@@ -2,14 +2,18 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
   Post,
+  UseGuards,
   UseInterceptors,
+  Request,
 } from '@nestjs/common';
 
 import { RegisterDto, LoginDto } from './validators-dto';
 import { UserService } from './user.service';
 import { UserServiceError } from './types';
 import { UserEntity } from './entities';
+import { AuthGuard } from '@nestjs/passport';
 
 interface LoginResponse {
   user: UserEntity;
@@ -26,10 +30,17 @@ export class AccountEntryController {
     return await this.userService.validateUser(signInDto);
   }
 
+  @UseGuards(AuthGuard('bearer'))
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get('/me')
+  public getMe(@Request() req: { user: UserEntity }): UserEntity {
+    return req.user;
+  }
+
   @Post('/register')
   public async register(
     @Body() registerDto: RegisterDto,
-  ): Promise<UserEntity | UserServiceError> {
+  ): Promise<boolean | UserServiceError> {
     return await this.userService.createUser(registerDto);
   }
 }
